@@ -34,11 +34,19 @@ function diff_exists() {
     fi
 }
 
+function force_commit_push() {
+    # 強制的に全ての差分をadd
+    # 時間をメッセージにしてコミットする
+}
+
 managed=()
+not_managed=()
 for project in $projects
 do
     if [ $(git_managed $project_root/$project) -eq 1 ];then
         managed+=($project)
+    else
+        not_managed+=($project)
     fi
 done
 
@@ -50,4 +58,14 @@ do
     fi
 done
 
-echo $has_diff
+echo "Not Managed by GIT and may disappear"
+for project in $not_managed
+do
+    echo_red $project
+done
+
+echo "Managed by GIT and has diff"
+for project in $has_diff
+do
+    echo_red $project
+done
