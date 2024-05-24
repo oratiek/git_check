@@ -23,6 +23,17 @@ function git_managed() {
     fi
 }
 
+function diff_exists() {
+    target_dir=$1
+    cd $target_dir
+    diff=$(git diff)
+    if [ -z $diff ]; then
+        echo 0
+    else
+        echo 1
+    fi
+}
+
 managed=()
 for project in $projects
 do
@@ -31,4 +42,12 @@ do
     fi
 done
 
-echo $managed
+has_diff=()
+for project in $managed
+do
+    if [ $(diff_exists $project_root/$project) -eq 1 ];then
+        has_diff+=($project)
+    fi
+done
+
+echo $has_diff
